@@ -16,6 +16,7 @@ import (
 var FullName string
 var ShortName string
 var ConsulIP string
+var redisIP string
 
 func registerEscape() {
     c := make(chan os.Signal, 2)
@@ -49,6 +50,7 @@ func RegisterMe(consulIP string, urlsToRegister []string, myPort string) (bool,e
     ConsulIP = consulIP
     myPortInt,_ := strconv.Atoi(myPort)
     myURL := "http://"+myIP+":"+myPort
+    redisIP = GetServiceAddress("redis")
 
     service := &consulapi.AgentServiceRegistration{
         ID:    myFullName,
@@ -86,7 +88,7 @@ func GetPageCount() string {
 
 func getRedisCount(key string) string {
     client := redisapi.NewClient(&redisapi.Options{
-        Addr:     "localhost:6379",
+        Addr:     redisIP+":6379",
         Password: "", // no password set
         DB:       0,  // use default DB
     })

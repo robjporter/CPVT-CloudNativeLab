@@ -4,10 +4,9 @@ import (
     "fmt"
     "net/http"
     "log"
-    "github.com/robjporter/CPVT-CloudNativeLab"
+    "github.com/robjporter/CPVT-CloudNativeLab/lab"
 )
 
-var redisServer string
 var serverCount string
 var dbStartCount string
 
@@ -34,7 +33,6 @@ func main() {
     portWeListenOn := "8080"
 
     result, err := lab.RegisterMe(ipOfConsul, urlsToRegister, portWeListenOn )
-    redisServer = lab.GetServiceAddress("redis")
     serverCount = lab.GetServerCount("localhost-")
     dbStartCount = lab.GetDBStartCount()
 
