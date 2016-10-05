@@ -4,7 +4,7 @@ import (
     "fmt"
     "net/http"
     "log"
-    "./lab"
+    "github.com/robjporter/CPVT-CloudNativeLab"
 )
 
 var redisServer string
