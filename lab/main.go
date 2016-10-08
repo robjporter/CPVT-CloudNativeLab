@@ -11,12 +11,14 @@ import (
     "strconv"
     consulapi "github.com/hashicorp/consul/api"
     redisapi "gopkg.in/redis.v4"
+    rabbitapi "github.com/streadway/amqp"
 )
 
 var FullName string
 var ShortName string
 var ConsulIP string
 var redisIP string
+var rabbitIP string
 
 func registerEscape() {
     c := make(chan os.Signal, 2)
@@ -76,6 +78,37 @@ func RegisterMe(consulIP string, urlsToRegister []string, myPort string) (bool,e
     fmt.Printf("Registered service %q in consul with %d tags\n", myShortName, len(tagsToRegister))
 
     return true, nil
+}
+
+func AddQueue(message string) {
+    sendRabbitMQ(message+ShortName)
+}
+
+func sendRabbitMQ(message string) {
+    if rabbitIP == "" {
+        rabbitIP = getServiceAddress("rabbitmq")
+    }
+
+    conn, err := amqp.Dial("amqp://guest:guest@"+rabbitIP+":5672/")
+	failOnError(err, "Failed to connect to RabbitMQ")
+	defer conn.Close()
+
+	ch, err := conn.Channel()
+	failOnError(err, "Failed to open a channel")
+	defer ch.Close()
+
+	q, err := ch.QueueDeclare("hello", false, false, false, false, nil,)
+	failOnError(err, "Failed to declare a queue")
+
+	err = ch.Publish("", q.Name, false, false, amqp.Publishing{ContentType: "text/plain",Body: []byte(message),})
+	fmt.Printf(" [x] Sent %s\n", message)
+	failOnError(err, "Failed to publish a message")
+}
+
+func failOnError(err error, msg string) {
+	if err != nil {
+		fmt.Printf("%s: %s\n", msg, err)
+	}
 }
 
 func GetDBStartCount() string {

@@ -11,7 +11,7 @@ var redisServer string
 var serverCount string
 var dbStartCount string
 
-func sayhelloName(w http.ResponseWriter, r *http.Request) {
+func sayhello(w http.ResponseWriter, r *http.Request) {
     color := "red"
     content := "<html><head></head><body bgcolor='"+color+"'>"
     content += serverCount+" servers currently serving web content.<br>"
@@ -26,7 +26,7 @@ func healthCheck(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-    http.HandleFunc("/", sayhelloName) // set router
+    http.HandleFunc("/", sayhello) // set router
     http.HandleFunc("/health", healthCheck) // set router
 
     urlsToRegister := []string{"/"}
@@ -48,4 +48,3 @@ func main() {
         fmt.Println(err)
     }
 }
-
