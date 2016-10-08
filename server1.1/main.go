@@ -35,7 +35,7 @@ func main() {
     http.HandleFunc("/health", healthCheck) // set router
     http.HandleFunc("/queue", addQueue) // set router
 
-    urlsToRegister := []string{"/","queue"}
+    urlsToRegister := []string{"/","/queue"}
     ipOfConsul := "172.17.0.2"
     portWeListenOn := "8080"
 

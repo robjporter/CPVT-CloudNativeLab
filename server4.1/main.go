@@ -12,7 +12,7 @@ var serverCount string
 var dbStartCount string
 
 func sayhello(w http.ResponseWriter, r *http.Request) {
-    color := "red"
+    color := "yellow"
     content := "<html><head></head><body bgcolor='"+color+"'>"
     content += serverCount+" servers currently serving web content.<br>"
     content += dbStartCount+" server starts have been seen.<br>"
@@ -35,7 +35,7 @@ func main() {
     http.HandleFunc("/health", healthCheck) // set router
     http.HandleFunc("/queue", addQueue) // set router
 
-    urlsToRegister := []string{"/","queue"}
+    urlsToRegister := []string{"/","/queue"}
     ipOfConsul := "172.17.0.2"
     portWeListenOn := "8080"
 
