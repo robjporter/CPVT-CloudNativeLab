@@ -89,7 +89,7 @@ func sendRabbitMQ(message string) {
         rabbitIP = getServiceAddress("rabbitmq")
     }
 
-    conn, err := amqp.Dial("amqp://guest:guest@"+rabbitIP+":5672/")
+    conn, err := rabbitapi.Dial("amqp://guest:guest@"+rabbitIP+":5672/")
 	failOnError(err, "Failed to connect to RabbitMQ")
 	defer conn.Close()
 
@@ -100,7 +100,7 @@ func sendRabbitMQ(message string) {
 	q, err := ch.QueueDeclare("hello", false, false, false, false, nil,)
 	failOnError(err, "Failed to declare a queue")
 
-	err = ch.Publish("", q.Name, false, false, amqp.Publishing{ContentType: "text/plain",Body: []byte(message),})
+	err = ch.Publish("", q.Name, false, false, rabbitapi.Publishing{ContentType: "text/plain",Body: []byte(message),})
 	fmt.Printf(" [x] Sent %s\n", message)
 	failOnError(err, "Failed to publish a message")
 }
